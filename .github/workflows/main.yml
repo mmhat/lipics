@@ -20,7 +20,7 @@ jobs:
           return files
       - name: "Test"
         shell: "bash"
-        script: |
+        run: |
           echo '${{ version.outputs.result }}'
       - name: "Setup Haskell environment"
         uses: softprops/action-gh-release@v2
