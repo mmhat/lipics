@@ -18,14 +18,11 @@ jobs:
           script: |
             const globber = await glob.create('lipics-v*.cls')
             const files = await globber.glob()
-            const class_file = files[0]
+            const class_file = files.at(0)
             const components = class_file.split('/')
-            console.log(files)
-            console.log(class_file)
-            console.log(components)
-            console.log(components[-1])
+            const filename = components.at(-1)
             console.log(components.at(-1))
-            console.log(components.pop())
+            console.log(class_file.match(/\/lipics-(v.+)\.cls$/))
             return files
       - name: "Test"
         shell: "bash"
