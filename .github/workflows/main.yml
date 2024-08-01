@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
-      - name: "Get version"
-        id: get-version
+      - name: "Create a tag"
+        id: create-tag
         uses: actions/github-script@v7
         with:
           result-encoding: string
@@ -19,30 +19,32 @@ jobs:
             const globber = await glob.create('lipics-v*.cls')
             const files = await globber.glob()
             const class_file = files.at(0)
-            const components = class_file.split('/')
-            const filename = components.at(-1)
             const match = class_file.match(/\/lipics-(?<version>v.+)\.cls$/)
             const version = match.groups.version
-            console.log(match)
             console.log(version)
-            return files
-      - name: "Test"
-        shell: "bash"
-        run: |
-          echo '${{ steps.get-version.outputs.result }}'
-      - name: "Setup Haskell environment"
+
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${version}`,
+              sha: context.sha
+            })
+
+            return version
+      - name: "Create a release"
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: "${{ steps.create-tag.result }}"
           files: |
             cc-by.pdf
             lipics-logo-bw.pdf
             lipics-v*.cls
             orcid.pdf
-  release-full:
-    name: "Release (full)"
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
-      - name: "Setup Haskell environment"
-        uses: softprops/action-gh-release@v2
+#  release-full:
+#    name: "Release (full)"
+#    runs-on: "ubuntu-latest"
+#    steps:
+#      - name: "Checkout repository"
+#        uses: actions/checkout@v4
+#      - name: "Setup Haskell environment"
+#        uses: softprops/action-gh-release@v2
