@@ -10,6 +10,18 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
+      - name: "Get version"
+        id: version
+        uses: actions/github-script@v7
+        result-encoding: string
+        script: |
+          const globber = await glob.create("lipics-v*.cls")
+          const files = await globber.glob()
+          return files
+      - name: "Test"
+        shell: "bash"
+        script: |
+          echo '${{ version.outputs.result }}'
       - name: "Setup Haskell environment"
         uses: softprops/action-gh-release@v2
         with:
