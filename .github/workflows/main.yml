@@ -20,6 +20,8 @@ jobs:
             const files = await globber.glob()
             console.log(files)
             const class_file = files[0]
+            console.log(class_file)
+            console.log(class_file.split('/'))
             console.log(class_file.split('/')[-1])
             return files
       - name: "Test"
