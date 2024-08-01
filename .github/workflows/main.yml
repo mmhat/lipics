@@ -19,6 +19,8 @@ jobs:
             const globber = await glob.create("lipics-v*.cls")
             const files = await globber.glob()
             console.log(files)
+            console.log(files[0])
+            console.log(files.slice(0))
             console.log(files.split('/').slice(-1))
             return files
       - name: "Test"
