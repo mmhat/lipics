@@ -11,7 +11,7 @@ jobs:
       - name: "Checkout repository"
         uses: actions/checkout@v4
       - name: "Get version"
-        id: version
+        id: get-version
         uses: actions/github-script@v7
         with:
           result-encoding: string
@@ -22,7 +22,7 @@ jobs:
       - name: "Test"
         shell: "bash"
         run: |
-          echo '${{ version.outputs.result }}'
+          echo '${{ steps.get-version.outputs.result }}'
       - name: "Setup Haskell environment"
         uses: softprops/action-gh-release@v2
         with:
