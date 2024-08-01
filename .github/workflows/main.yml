@@ -1,0 +1,28 @@
+name: "main"
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+      - name: "Setup Haskell environment"
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            cc-by.pdf
+            lipics-logo-bw.pdf
+            lipics-v*.cls
+            orcid.pdf
+  release-full:
+    name: "Release (full)"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+      - name: "Setup Haskell environment"
+        uses: softprops/action-gh-release@v2
