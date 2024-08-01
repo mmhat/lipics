@@ -1,0 +1,49 @@
+name: "main"
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+      - name: "Create a tag"
+        id: create-tag
+        uses: actions/github-script@v7
+        with:
+          result-encoding: string
+          script: |
+            const globber = await glob.create('lipics-v*.cls')
+            const files = await globber.glob()
+            const class_file = files.at(0)
+            const match = class_file.match(/\/lipics-(?<version>v.+)\.cls$/)
+            const version = match.groups.version
+            console.log(`Version: ${version}`)
+
+            try {
+              await github.rest.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `refs/tags/${version}`,
+                sha: context.sha
+              })
+            } catch(error) {
+              if (!(error.status == 422 && error.message == 'Reference already exists')) {
+                core.setFailed(e.message)
+                throw e
+              }
+            }
+
+            return version
+      - name: "Create a release"
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "${{ steps.create-tag.outputs.result }}"
+          files: |
+            cc-by.pdf
+            lipics-logo-bw.pdf
+            lipics-v*.cls
+            orcid.pdf
