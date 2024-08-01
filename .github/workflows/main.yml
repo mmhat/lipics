@@ -10,6 +10,15 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v4
+      - name: "Prepare (full)"
+        run: tar caf full.tar.gz *
+      - name: "Prepare (slim)"
+        run: |
+          tar caf slim.tar.gz \
+            cc-by.pdf \
+            lipics-logo-bw.pdf \
+            lipics-v*.cls \
+            orcid.pdf
       - name: "Create a tag"
         id: create-tag
         uses: actions/github-script@v7
@@ -43,7 +52,5 @@ jobs:
         with:
           tag_name: "${{ steps.create-tag.outputs.result }}"
           files: |
-            cc-by.pdf
-            lipics-logo-bw.pdf
-            lipics-v*.cls
-            orcid.pdf
+            full.tar.gz
+            slim.tar.gz
