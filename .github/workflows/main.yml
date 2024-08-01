@@ -22,7 +22,7 @@ jobs:
             const components = class_file.split('/')
             const filename = components.at(-1)
             console.log(components.at(-1))
-            console.log(class_file.match(/\/lipics-(v.+)\.cls$/))
+            console.log(class_file.match(/\/lipics-(?<version>v.+)\.cls$/))
             return files
       - name: "Test"
         shell: "bash"
