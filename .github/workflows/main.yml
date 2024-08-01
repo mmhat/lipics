@@ -21,8 +21,10 @@ jobs:
             const class_file = files.at(0)
             const components = class_file.split('/')
             const filename = components.at(-1)
-            console.log(components.at(-1))
-            console.log(class_file.match(/\/lipics-(?<version>v.+)\.cls$/))
+            const match = class_file.match(/\/lipics-(?<version>v.+)\.cls$/)
+            const version = match.groups.version
+            console.log(match)
+            console.log(version)
             return files
       - name: "Test"
         shell: "bash"
